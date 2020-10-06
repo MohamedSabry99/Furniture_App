@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_app/constants.dart';
+import 'file:///D:/my%20courses/Furniture%20App%20GitHub/lib/routes.dart';
 import 'package:furniture_app/screens/home/home_screen.dart';
+import 'package:furniture_app/screens/sign_in/sign_in_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         // Here we set DM Sans as our default fonts
         // Now we also apply out text color to all flutter textTheme
         textTheme:
-            GoogleFonts.dmSansTextTheme().apply(displayColor: kTextColor),
+        GoogleFonts.dmSansTextTheme().apply(displayColor: kTextColor),
         // Almost all of our app bar have this style
         appBarTheme: AppBarTheme(
           color: Colors.transparent,
@@ -28,7 +30,8 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      initialRoute: SignInScreen.routeName,
+      routes: routes,
     );
   }
 }
