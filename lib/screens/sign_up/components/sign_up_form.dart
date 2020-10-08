@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_app/components/custom_surfix_icon.dart';
 import 'package:furniture_app/components/default_button.dart';
+import 'package:furniture_app/screens/home/home_screen.dart';
 
 
 import '../../../constants.dart';
@@ -41,19 +42,19 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: 30),
           buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: 30),
           buildConformPassFormField(),
           //FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(40)),
+          SizedBox(height: 40),
           DefaultButton(
             text: "Continue",
             press: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
                 // if all are valid then go to success screen
-               // Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+               Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
           ),

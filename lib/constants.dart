@@ -4,7 +4,7 @@ const kPrimaryColor = Color(0xFFA95EFA);
 const kSecondaryColor = Color(0xFFF3F6F8);
 const kTextColor = Color(0xFF171717);
 final headingStyle = TextStyle(
-  fontSize: getProportionateScreenWidth(28),
+  fontSize: 28,
   fontWeight: FontWeight.bold,
   color: Colors.black,
   height: 1.5,
