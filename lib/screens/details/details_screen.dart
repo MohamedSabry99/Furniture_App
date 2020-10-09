@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:furniture_app/constants.dart';
 import 'package:furniture_app/models/Product.dart';
 import 'package:furniture_app/size_config.dart';
-
 import 'components/body.dart';
 
 class DetailsScreen extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_app/models/Categories.dart';
-
 import 'category_card.dart';
 
 class Categories extends StatelessWidget {

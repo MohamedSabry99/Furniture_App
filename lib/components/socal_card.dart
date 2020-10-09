@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_app/constants.dart';
+import 'package:furniture_app/size_config.dart';
 
-import '../size_config.dart';
 
 class SocalCard extends StatelessWidget {
   const SocalCard({
-    Key key,
-    this.icon,
+    Key key ,
     this.press,
+    this.text,
   }) : super(key: key);
 
-  final String icon;
+  final String text;
   final Function press;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
-      child: Container(
-        margin:
-            EdgeInsets.symmetric(horizontal: 15),
-        padding: EdgeInsets.all(12),
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Color(0xFFF5F6F9),
-          shape: BoxShape.circle,
+    return SizedBox(
+      height: 56,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: kPrimaryColor,
+        onPressed: press,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
         ),
-        child: SvgPicture.asset(icon),
       ),
     );
   }

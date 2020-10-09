@@ -3,7 +3,6 @@ import 'package:furniture_app/components/title_text.dart';
 import 'package:furniture_app/services/fetchCategories.dart';
 import 'package:furniture_app/services/fetchProducts.dart';
 import 'package:furniture_app/size_config.dart';
-
 import 'categories.dart';
 import 'recommond_products.dart';
 

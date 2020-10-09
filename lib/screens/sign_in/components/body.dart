@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:furniture_app/components/default_button.dart';
 import 'package:furniture_app/components/no_account_text.dart';
 import 'package:furniture_app/components/socal_card.dart';
 import '../../../size_config.dart';
 import 'sign_form.dart';
+import 'package:furniture_app/components/custom_surfix_icon.dart';
+import 'package:furniture_app/components/default_button.dart';
+import 'package:furniture_app/screens/home/home_screen.dart';
+
 
 class Body extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,12 +42,17 @@ class Body extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SocalCard(
-                        icon: "assets/icons/google-icon.svg",
-                        press: () {},
+                      DefaultButton(
+                        text: "Gmail",
+                        press: () {
+                          if(_formKey.currentState.validate()){
+                            _formKey.currentState.save();
+                            Navigator.pushNamed(context, HomeScreen.routeName);
+                          }
+                        },
                       ),
                       SocalCard(
-                        icon: "assets/icons/Phone.svg",
+                        text: "Phone",
                         press: () {},
                       ),
 
