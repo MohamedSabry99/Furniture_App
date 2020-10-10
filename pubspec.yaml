@@ -30,6 +30,10 @@ dependencies:
   flutter_svg: ^0.18.0 #It help us to use SVG on our app dont use 0.18.*
   google_fonts: ^1.1.0 # We can use any fonts from google fonts
   http: ^0.12.2 # It help us to  fatch data from API
+  firebase_auth: ^0.18.1+2
+  google_sign_in: ^4.5.4
+  firebase_core: ^0.5.0+1
+  firebase_storage: ^4.0.1
 
 dev_dependencies:
   flutter_test:

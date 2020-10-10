@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_app/constants.dart';
-import 'file:///D:/my%20courses/Furniture%20App%20GitHub/lib/routes.dart';
+import 'package:furniture_app/routes.dart';
 import 'package:furniture_app/screens/home/home_screen.dart';
 import 'package:furniture_app/screens/sign_in/sign_in_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

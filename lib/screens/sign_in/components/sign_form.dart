@@ -4,6 +4,8 @@ import 'package:furniture_app/screens/home/home_screen.dart';
 import 'package:furniture_app/components/default_button.dart';
 import 'package:furniture_app/constants.dart';
 import 'package:furniture_app/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignForm extends StatefulWidget {
   @override
@@ -12,10 +14,13 @@ class SignForm extends StatefulWidget {
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
-  bool remember = false;
+  final _scaffoldKey=GlobalKey<ScaffoldState>();
+  final FirebaseAuth _auth=FirebaseAuth.instance;
+
+  TextEditingController _emailController=TextEditingController();
+  TextEditingController _passwordController=TextEditingController();
   final List<String> errors = [];
+  bool remember = false;
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -68,12 +73,9 @@ class _SignFormState extends State<SignForm> {
           DefaultButton(
             text: "Continue",
             press: () {
-              Navigator.pushNamed(context, HomeScreen.routeName);
-              // if (_formKey.currentState.validate()) {
-              //   _formKey.currentState.save();
-                // if all are valid then go to success screen
-                //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-              //}
+               if (_formKey.currentState.validate()) {
+                 _Signin();
+               }
             },
           ),
         ],
@@ -84,21 +86,16 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-         removeError(error: kShortPassError);
+      controller: _passwordController,
+      onChanged: (value){
+        if(value.isNotEmpty){
+          removeError(error: kPassNullError);
         }
         return null;
       },
       validator: (value) {
         if (value.isEmpty) {
           addError(error: kPassNullError);
-          //return "";
-        } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return "";
         }
         return null;
       },
@@ -116,23 +113,22 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-         removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-         removeError(error: kInvalidEmailError);}
-
-       return null;
+      controller: _emailController,
+      onChanged: (value){
+        if(value.isNotEmpty){
+          removeError(error: kEmailNullError);
+        }else if(emailValidatorRegExp.hasMatch(value)){
+          removeError(error: kInvalidEmailError);
+        }
       },
       validator: (value) {
         if (value.isEmpty) {
-          addError(error: kEmailNullError);
+         addError(error: kEmailNullError);
          return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
+       }else if(!emailValidatorRegExp.hasMatch(value)){
           addError(error: kInvalidEmailError);
           return "";
-       }
+        }
         return null;
       },
       decoration: InputDecoration(
@@ -144,5 +140,23 @@ class _SignFormState extends State<SignForm> {
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
     );
+  }
+
+  void _Signin() async{
+    try {
+      final User user = (await _auth.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text))
+          .user;
+      if(!user.emailVerified) {
+        await user.sendEmailVerification();
+      }
+      Navigator.pushNamed(context, HomeScreen.routeName);
+    }catch (e){
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text('Failed to sign in'),
+      ));
+      print(e);
+
+    }
   }
 }

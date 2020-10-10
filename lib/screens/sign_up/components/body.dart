@@ -26,20 +26,7 @@ class Body extends StatelessWidget {
                 SizedBox(height:8),
                 SignUpForm(),
                 SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocalCard(
-                      text: "assets/icons/google-icon.svg",
-                      press: () {},
-                    ),
-                    SocalCard(
-                      text: "assets/icons/Phone.svg",
-                      press: () {},
-                    ),
 
-                  ],
-                ),
                 SizedBox(height: 20),
                 Text(
                   'By continuing your confirm that you agree \nwith our Term and Condition',

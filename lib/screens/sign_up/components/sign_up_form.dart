@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture_app/components/custom_surfix_icon.dart';
 import 'package:furniture_app/components/default_button.dart';
 import 'package:furniture_app/screens/home/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 import '../../../constants.dart';
@@ -15,9 +16,10 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
-  String conform_password;
+  final FirebaseAuth _auth=FirebaseAuth.instance;
+  TextEditingController _emailController=TextEditingController();
+  TextEditingController _passwordController=TextEditingController();
+  TextEditingController _confirmController=TextEditingController();
   bool remember = false;
   final List<String> errors = [];
 
@@ -50,11 +52,10 @@ class _SignUpFormState extends State<SignUpForm> {
           SizedBox(height: 40),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async{
               if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
+                _register();
                 // if all are valid then go to success screen
-               Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
           ),
@@ -66,22 +67,10 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField buildConformPassFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => conform_password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kPassNullError);
-        } else if (value.isNotEmpty && password == conform_password) {
-          //removeError(error: kMatchPassError);
-        }
-        conform_password = value;
-      },
+      controller: _confirmController,
       validator: (value) {
-        if (value.isEmpty) {
-          //addError(error: kPassNullError);
-          return "";
-        } else if ((password != value)) {
-         // addError(error: kMatchPassError);
-          return "";
+        if (value.isEmpty ) {
+          return kPassNullError;
         }
         return null;
       },
@@ -99,22 +88,16 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          //removeError(error: kShortPassError);
+      controller: _passwordController,
+      onChanged: (value){
+        if(value.isNotEmpty&&_passwordController.text == _confirmController.text){
+          removeError(error: kMatchPassError);
         }
-        password = value;
+        _confirmController.text=value;
       },
       validator: (value) {
         if (value.isEmpty) {
-        //  addError(error: kPassNullError);
-          return "";
-        } else if (value.length < 8) {
-        //  addError(error: kShortPassError);
-          return "";
+         return kPassNullError;
         }
         return null;
       },
@@ -132,24 +115,12 @@ class _SignUpFormState extends State<SignUpForm> {
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kEmailNullError);
-        } //else if (emailValidatorRegExp.hasMatch(value)) {
-         // removeError(error: kInvalidEmailError);
-       // }
-       // return null;
-      },
+      controller: _emailController,
       validator: (value) {
         if (value.isEmpty) {
-         // addError(error: kEmailNullError);
-          return "";
-        } //else if (!emailValidatorRegExp.hasMatch(value)) {
-         // addError(error: kInvalidEmailError);
-         // return "";
-        //}
-       // return null;
+          return kEmailNullError;
+        }
+        return null;
       },
       decoration: InputDecoration(
         labelText: "Email",
@@ -160,5 +131,17 @@ class _SignUpFormState extends State<SignUpForm> {
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
     );
+  }
+  void _register() async{
+    final User user=(await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text, password: _passwordController.text)).user;
+    if(user != null){
+      if(!user.emailVerified){
+        await user.sendEmailVerification();
+      }
+      await user.updateEmail(_emailController.text);
+      await user.updatePassword(_passwordController.text);
+      Navigator.pushNamed(context, HomeScreen.routeName);
+    }
   }
 }
